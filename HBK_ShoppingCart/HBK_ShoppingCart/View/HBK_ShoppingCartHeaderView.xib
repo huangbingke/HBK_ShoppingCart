@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HBK_ShoppingCartHeaderView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2eT-p1-yVl">
+                    <rect key="frame" x="10" y="8" width="30" height="29"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="TQo-4C-LYm"/>
+                    </constraints>
+                    <state key="normal" image="unClick"/>
+                    <connections>
+                        <action selector="click:" destination="iN0-l3-epB" eventType="touchUpInside" id="GOb-P4-Gqu"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="38w-tZ-0gh">
+                    <rect key="frame" x="45" y="7" width="30" height="30"/>
+                    <color key="backgroundColor" red="0.19237748129999999" green="1" blue="0.26417491430000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="BPn-Bx-4t9"/>
+                        <constraint firstAttribute="height" constant="30" id="JK9-BT-TvL"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jQa-gv-mNH">
+                    <rect key="frame" x="80" y="12" width="42" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <constraints>
+                <constraint firstItem="38w-tZ-0gh" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="0yO-nP-YNe"/>
+                <constraint firstItem="38w-tZ-0gh" firstAttribute="leading" secondItem="2eT-p1-yVl" secondAttribute="trailing" constant="5" id="O4Z-O7-yYF"/>
+                <constraint firstItem="2eT-p1-yVl" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="PMa-Tj-Hu4"/>
+                <constraint firstItem="2eT-p1-yVl" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="clc-oi-l8j"/>
+                <constraint firstItem="jQa-gv-mNH" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="ddc-O3-H7a"/>
+                <constraint firstItem="jQa-gv-mNH" firstAttribute="leading" secondItem="38w-tZ-0gh" secondAttribute="trailing" constant="5" id="soZ-hy-a5J"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="clickBtn" destination="2eT-p1-yVl" id="wMY-be-WQq"/>
+                <outlet property="storeImageView" destination="38w-tZ-0gh" id="Xop-y7-Zzi"/>
+                <outlet property="storeNameLabel" destination="jQa-gv-mNH" id="d9P-pK-U3g"/>
+            </connections>
+            <point key="canvasLocation" x="64.5" y="324.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="unClick" width="29" height="29"/>
+    </resources>
+</document>

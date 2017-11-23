@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "HBK_ShoppingCartViewController.h"
 @interface ViewController ()
 
 @end
@@ -18,7 +18,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 }
-
+- (IBAction)goShoppingCart:(UIButton *)sender {
+    HBK_ShoppingCartViewController *shoppingCartVC = [[HBK_ShoppingCartViewController alloc] init];
+    shoppingCartVC.isSubPage = YES;
+    [self.navigationController pushViewController:shoppingCartVC animated:YES];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
