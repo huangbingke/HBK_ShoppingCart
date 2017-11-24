@@ -36,9 +36,16 @@
 }
 
 //选中
-- (IBAction)click:(id)sender {
-
-
+- (IBAction)click:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    if (sender.selected) {
+        [sender setImage:[UIImage imageNamed:@"clicked"] forState:(UIControlStateNormal)];
+    } else {
+        [sender setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
+    }
+    if (self.ClickRowBlock) {
+        self.ClickRowBlock(sender.selected);
+    }
 }
 
 - (void)setGoodsModel:(HBK_GoodsModel *)goodsModel {

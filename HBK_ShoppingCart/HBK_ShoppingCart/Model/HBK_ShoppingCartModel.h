@@ -17,6 +17,7 @@
 @property (nonatomic, copy) NSString *sid;
 
 @property (nonatomic, strong) NSArray *goodsArray;
+@property (nonatomic, assign) BOOL isSelect;
 
 @end
 
@@ -37,5 +38,9 @@
 @property (nonatomic, copy) NSString *total;
 @property (nonatomic, copy) NSString *sid;
 @property (nonatomic, copy) NSString *userId;
+
+@property (nonatomic, assign) BOOL isSelect;
+
+
 
 @end

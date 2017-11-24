@@ -24,10 +24,15 @@
     } else {
         [sender setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
     }
+    if (self.AllClickBlock) {
+        self.AllClickBlock();
+    }
 }
 
 - (IBAction)accountBtn:(UIButton *)sender {
-    
+    if (self.AccountBlock) {
+        self.AccountBlock();
+    }
 }
 
 @end

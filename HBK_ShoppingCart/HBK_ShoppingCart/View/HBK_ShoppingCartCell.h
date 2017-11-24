@@ -29,7 +29,7 @@
 /**
  选中
  */
-@property (nonatomic, copy) void (^ClickRowBlock)();
+@property (nonatomic, copy) void (^ClickRowBlock)(BOOL isClick);
 
 /**
  加

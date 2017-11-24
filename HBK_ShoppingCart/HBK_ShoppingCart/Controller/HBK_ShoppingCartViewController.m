@@ -19,11 +19,21 @@
 @property (nonatomic, strong) UITableView *myTableView;
 @property (nonatomic, strong) NSMutableArray<HBK_StoreModel *> *storeArray;
 
+/**
+ 选中的数组
+ */
+@property (nonatomic, strong) NSMutableArray *selectArray;
 
 @end
 
 @implementation HBK_ShoppingCartViewController
 
+- (NSMutableArray *)selectArray {
+    if (!_selectArray) {
+        self.selectArray = [NSMutableArray new];
+    }
+    return _selectArray;
+}
 - (NSMutableArray *)storeArray {
     if (!_storeArray) {
         self.storeArray = [NSMutableArray new];
@@ -59,6 +69,10 @@
     
     HBK_ShopppingCartBottomView *bottomView = [[[NSBundle mainBundle] loadNibNamed:@"HBK_ShopppingCartBottomView" owner:nil options:nil] objectAtIndex:0];
     bottomView.frame = CGRectMake(0, kScreenHeight - tabBarHeight - kBottomHeight, kScreenWidth, kBottomHeight);
+    //全选
+    bottomView.AllClickBlock = ^{
+        
+    };
     [self.view addSubview:bottomView];
 }
 
@@ -75,6 +89,26 @@
     HBK_StoreModel *storeModel = self.storeArray[indexPath.section];
     HBK_GoodsModel *goodsModel = storeModel.goodsArray[indexPath.row];
     cell.goodsModel = goodsModel;
+    
+    //选中某一行
+    cell.ClickRowBlock = ^(BOOL isClick) {
+        goodsModel.isSelect = isClick;
+        if (isClick) {//选中
+            
+        } else {//取消选中
+            
+        }
+    };
+    //加
+    cell.AddBlock = ^(UILabel *countLabel) {
+        
+        
+    };
+    //减
+    cell.CutBlock = ^(UILabel *countLabel) {
+        
+        
+    };
     return cell;
 }
 
@@ -93,9 +127,16 @@
     headerView.contentView.backgroundColor = [UIColor whiteColor];
     HBK_StoreModel *storeModel = self.storeArray[section];
     headerView.storeModel = storeModel;
-    
+    //选中一个分区
+    headerView.ClickBlock = ^{
+        
+    };
     return headerView;
 }
+
+#pragma mark ------------------------Action-----------------------------
+//- (void)
+
 
 
 
