@@ -14,9 +14,11 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *allPriceLabel;
 
-@property (nonatomic, copy) void (^AllClickBlock)();
+@property (nonatomic, copy) void (^AllClickBlock)(BOOL isClick);
 @property (nonatomic, copy) void (^AccountBlock)();
 
+@property (weak, nonatomic) IBOutlet UIButton *clickBtn;
 
+@property (nonatomic, assign) BOOL isClick;
 
 @end

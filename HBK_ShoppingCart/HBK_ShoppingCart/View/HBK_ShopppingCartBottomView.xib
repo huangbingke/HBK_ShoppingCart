@@ -42,6 +42,7 @@
                     <state key="normal" title="全选" image="unClick">
                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
+                    <state key="selected" image="clicked"/>
                     <connections>
                         <action selector="allClickBtn:" destination="iN0-l3-epB" eventType="touchUpInside" id="gu5-OJ-ukY"/>
                     </connections>
@@ -62,11 +63,13 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="allPriceLabel" destination="Jer-Pl-Vkq" id="CtO-KH-wOr"/>
+                <outlet property="clickBtn" destination="Cyp-JN-0Kd" id="WNF-eB-kzE"/>
             </connections>
             <point key="canvasLocation" x="25.5" y="362.5"/>
         </view>
     </objects>
     <resources>
+        <image name="clicked" width="29" height="29"/>
         <image name="unClick" width="29" height="29"/>
     </resources>
 </document>

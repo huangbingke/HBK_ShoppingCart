@@ -18,7 +18,7 @@
 
 @property (nonatomic, strong) UITableView *myTableView;
 @property (nonatomic, strong) NSMutableArray<HBK_StoreModel *> *storeArray;
-
+@property (nonatomic, strong) HBK_ShopppingCartBottomView *bottomView;
 /**
  选中的数组
  */
@@ -67,13 +67,12 @@
     [self.myTableView registerNib:[UINib nibWithNibName:@"HBK_ShoppingCartCell" bundle:nil] forCellReuseIdentifier:@"HBK_ShoppingCartCell"];
     [self.myTableView registerNib:[UINib nibWithNibName:@"HBK_ShoppingCartHeaderView" bundle:nil] forHeaderFooterViewReuseIdentifier:@"HBK_ShoppingCartHeaderView"];
     
-    HBK_ShopppingCartBottomView *bottomView = [[[NSBundle mainBundle] loadNibNamed:@"HBK_ShopppingCartBottomView" owner:nil options:nil] objectAtIndex:0];
-    bottomView.frame = CGRectMake(0, kScreenHeight - tabBarHeight - kBottomHeight, kScreenWidth, kBottomHeight);
+    self.bottomView = [[[NSBundle mainBundle] loadNibNamed:@"HBK_ShopppingCartBottomView" owner:nil options:nil] objectAtIndex:0];
+    self.bottomView.frame = CGRectMake(0, kScreenHeight - tabBarHeight - kBottomHeight, kScreenWidth, kBottomHeight);
     //全选
-    bottomView.AllClickBlock = ^{
-        
-    };
-    [self.view addSubview:bottomView];
+    [self clickAllSelectBottomView:self.bottomView];
+    
+    [self.view addSubview:self.bottomView];
 }
 
 #pragma mark ------------------ <UITableViewDelegate, UITableViewDataSource> ----
@@ -94,20 +93,30 @@
     cell.ClickRowBlock = ^(BOOL isClick) {
         goodsModel.isSelect = isClick;
         if (isClick) {//选中
-            
+            NSLog(@"选中");
+            [self.selectArray addObject:goodsModel];
         } else {//取消选中
-            
+            NSLog(@"取消选中");
+            [self.selectArray removeObject:goodsModel];
         }
+        
+        [self judgeIsSelectSection:indexPath.section];
+        [self judgeIsAllSelect];
+        [self countPrice];
     };
     //加
     cell.AddBlock = ^(UILabel *countLabel) {
-        
-        
+        NSLog(@"%@", countLabel.text);
+        goodsModel.count = countLabel.text;
+        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
+        [self countPrice];
     };
     //减
     cell.CutBlock = ^(UILabel *countLabel) {
-        
-        
+        NSLog(@"%@", countLabel.text);
+        goodsModel.count = countLabel.text;
+        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
+        [self countPrice];
     };
     return cell;
 }
@@ -127,15 +136,135 @@
     headerView.contentView.backgroundColor = [UIColor whiteColor];
     HBK_StoreModel *storeModel = self.storeArray[section];
     headerView.storeModel = storeModel;
-    //选中一个分区
-    headerView.ClickBlock = ^{
-        
-    };
+    //分区区头点击事件--- 把事件分离出去
+    [self clickSectionHeaderView:headerView andHBK_StoreModel:storeModel];
     return headerView;
 }
 
-#pragma mark ------------------------Action-----------------------------
-//- (void)
+#pragma mark ------------------------Action 逻辑处理-----------------------------
+
+/**
+ 判断分区有没有被全选
+ @param section 分区坐标
+ */
+- (void)judgeIsSelectSection:(NSInteger)section {
+    HBK_StoreModel *storeModel = self.storeArray[section];
+    BOOL isSelectSection = YES;
+    //遍历分区商品, 如果有商品的没有被选择, 跳出循环, 说明没有全选
+    for (HBK_GoodsModel *goodsModel in storeModel.goodsArray) {
+        if (goodsModel.isSelect == NO) {
+            isSelectSection = NO;
+            break;
+        }
+    }
+    //全选了以后, 改变一下选中状态
+    HBK_ShoppingCartHeaderView *headerView = (HBK_ShoppingCartHeaderView *)[self.myTableView headerViewForSection:section];
+    headerView.isClick = isSelectSection;
+    storeModel.isSelect = isSelectSection;
+}
+
+/**
+ 是否全选
+ */
+- (void)judgeIsAllSelect {
+    NSInteger count = 0;
+    //先遍历购物车商品, 得到购物车有多少商品
+    for (HBK_StoreModel *storeModel in self.storeArray) {
+        count += storeModel.goodsArray.count;
+    }
+    //如果购物车总商品数量 等于 选中的商品数量, 即表示全选了
+    if (count == self.selectArray.count) {
+        self.bottomView.isClick = YES;
+    } else {
+        self.bottomView.isClick = NO;
+    }   
+}
+
+
+/**
+ 计算价格
+ */
+- (void)countPrice {
+    double totlePrice = 0.0;
+    for (HBK_GoodsModel *goodsModel in self.selectArray) {
+        double price = [goodsModel.realPrice doubleValue];
+        totlePrice += price * [goodsModel.count integerValue];
+    }
+    self.bottomView.allPriceLabel.text = [NSString stringWithFormat:@"合计 ￥%.2f", totlePrice];
+}
+
+
+#pragma mark  ----------- Action 点击事件 --------------------
+/**
+ 区头点击----选中某个分区/取消选中某个分区
+ @param headerView 分区
+ @param storeModel 分区模型
+ */
+- (void)clickSectionHeaderView:(HBK_ShoppingCartHeaderView *)headerView andHBK_StoreModel:(HBK_StoreModel *)storeModel {
+    headerView.ClickBlock = ^(BOOL isClick) {
+        storeModel.isSelect = isClick;
+        
+        if (isClick) {//选中
+            NSLog(@"选中");
+            for (HBK_GoodsModel *goodsModel in storeModel.goodsArray) {
+                goodsModel.isSelect = YES;
+                if (![self.selectArray containsObject:goodsModel]) {
+                    [self.selectArray addObject:goodsModel];
+                }
+            }
+
+        } else {//取消选中
+            NSLog(@"取消选中");
+            for (HBK_GoodsModel *goodsModel in storeModel.goodsArray) {
+                goodsModel.isSelect = NO;
+                if ([self.selectArray containsObject:goodsModel]) {
+                    [self.selectArray removeObject:goodsModel];
+                }
+            }
+        }
+        [self judgeIsAllSelect];
+        [self.myTableView reloadData];
+        [self countPrice];
+    };
+}
+
+
+/**
+ 全选点击---逻辑处理
+ @param bottomView 底部的View
+ */
+- (void)clickAllSelectBottomView:(HBK_ShopppingCartBottomView *)bottomView {
+    kWeakSelf(self);
+    bottomView.AllClickBlock = ^(BOOL isClick) {
+        kStrongSelf(self);
+        for (HBK_GoodsModel *goodsModel in self.selectArray) {
+            goodsModel.isSelect = NO;
+        }
+        [self.selectArray removeAllObjects];
+        if (isClick) {//选中
+            NSLog(@"全选");
+            for (HBK_StoreModel *storeModel in self.storeArray) {
+                storeModel.isSelect = YES;
+                for (HBK_GoodsModel *goodsModel in storeModel.goodsArray) {
+                    goodsModel.isSelect = YES;
+                    [self.selectArray addObject:goodsModel];
+                }
+            }
+        } else {//取消选中
+            NSLog(@"取消全选");
+            for (HBK_StoreModel *storeModel in self.storeArray) {
+                storeModel.isSelect = NO;
+            }
+        }
+        [self.myTableView reloadData];
+        [self countPrice];
+    };
+}
+
+
+
+
+
 
 
 

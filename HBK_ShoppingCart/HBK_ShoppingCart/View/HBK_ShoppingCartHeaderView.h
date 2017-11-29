@@ -15,6 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *storeImageView;
 
 @property (nonatomic, strong) HBK_StoreModel *storeModel;
-@property (nonatomic, copy) void (^ClickBlock)();
-
+@property (nonatomic, copy) void (^ClickBlock)(BOOL isClick);
+@property (nonatomic, assign) BOOL isClick;
 @end

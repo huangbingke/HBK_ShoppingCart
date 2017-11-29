@@ -10,6 +10,7 @@
 
 @implementation HBK_StoreModel
 
+
 - (void)setGoods:(NSMutableArray<HBK_GoodsModel *> *)goods {
     _goods = goods;
     NSMutableArray *tempArray = [NSMutableArray new];
@@ -21,7 +22,9 @@
     self.goodsArray = [tempArray copy];
 }
 
-
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key {
+    
+}
 
 
 @end

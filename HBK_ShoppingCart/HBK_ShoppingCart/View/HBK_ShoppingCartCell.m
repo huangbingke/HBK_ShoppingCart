@@ -23,6 +23,12 @@
 
 //减
 - (IBAction)cut:(UIButton *)sender {
+    NSInteger count = [self.countLabel.text integerValue];
+    count--;
+    if (count <= 0) {
+        return;
+    }
+    self.countLabel.text = [NSString stringWithFormat:@"%ld", count];
     if (self.CutBlock) {
         self.CutBlock(self.countLabel);
     }
@@ -30,6 +36,9 @@
 
 //加
 - (IBAction)add:(UIButton *)sender {
+    NSInteger count = [self.countLabel.text integerValue];
+    count++;
+    self.countLabel.text = [NSString stringWithFormat:@"%ld", count];
     if (self.AddBlock) {
         self.AddBlock(self.countLabel);
     }
@@ -50,22 +59,18 @@
 
 - (void)setGoodsModel:(HBK_GoodsModel *)goodsModel {
     _goodsModel = goodsModel;
-    if ([goodsModel.count integerValue] > 0) {
-        //库存大于0, 选中按钮正常显示
-        [self.clickBtn setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
-        self.clickBtn.userInteractionEnabled = YES;
+    self.clickBtn.selected = goodsModel.isSelect;
+    if (goodsModel.isSelect) {
+        [self.clickBtn setImage:[UIImage imageNamed:@"clicked"] forState:(UIControlStateNormal)];
     } else {
-        //库存小于零, 显示
-        self.clickBtn.userInteractionEnabled = NO;
-        [self.clickBtn setTitle:@"失效" forState:(UIControlStateNormal)];
-        self.clickBtn.backgroundColor = [UIColor lightGrayColor];
+        [self.clickBtn setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
     }
+    self.countLabel.text = [NSString stringWithFormat:@"%@", goodsModel.count];
     self.goodImageView.backgroundColor = kRandomColor;
     self.goodsNameLabel.text = goodsModel.goodsName;
     self.priceLabel.text = [NSString stringWithFormat:@"%@元", goodsModel.realPrice];
     self.brandLabel.text = [NSString stringWithFormat:@"%@", goodsModel.shopName];
 }
-
 
 
 

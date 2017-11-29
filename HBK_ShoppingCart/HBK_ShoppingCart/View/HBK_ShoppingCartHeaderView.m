@@ -18,16 +18,30 @@
 }
 */
 - (IBAction)click:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    if (sender.selected) {
+        [sender setImage:[UIImage imageNamed:@"clicked"] forState:(UIControlStateNormal)];
+    } else {
+        [sender setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
+    }
     if (self.clickBtn) {
-        self.ClickBlock();
+        self.ClickBlock(sender.selected);
     }
 }
 
 - (void)setStoreModel:(HBK_StoreModel *)storeModel {
     self.storeNameLabel.text = storeModel.shopName;
-    
+    self.isClick = storeModel.isSelect;
 }
 
-
+- (void)setIsClick:(BOOL)isClick {
+    _isClick = isClick;
+    self.clickBtn.selected = isClick;
+    if (isClick) {
+        [self.clickBtn setImage:[UIImage imageNamed:@"clicked"] forState:(UIControlStateNormal)];
+    } else {
+        [self.clickBtn setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
+    }
+}
 
 @end

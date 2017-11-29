@@ -18,7 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *brandLabel;
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 
-@property (weak, nonatomic) IBOutlet UILabel *countLabel;
+@property (weak, nonatomic) IBOutlet UILabel *countLabel;//数量
 
 @property (weak, nonatomic) IBOutlet UIButton *cutBtn;
 

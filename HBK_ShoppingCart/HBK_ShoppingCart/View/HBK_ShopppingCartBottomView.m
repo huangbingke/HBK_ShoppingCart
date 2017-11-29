@@ -25,13 +25,23 @@
         [sender setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
     }
     if (self.AllClickBlock) {
-        self.AllClickBlock();
+        self.AllClickBlock(sender.selected);
     }
 }
 
 - (IBAction)accountBtn:(UIButton *)sender {
     if (self.AccountBlock) {
         self.AccountBlock();
+    }
+}
+
+- (void)setIsClick:(BOOL)isClick {
+    _isClick = isClick;
+    self.clickBtn.selected = isClick;
+    if (isClick) {
+        [self.clickBtn setImage:[UIImage imageNamed:@"clicked"] forState:(UIControlStateNormal)];
+    } else {
+        [self.clickBtn setImage:[UIImage imageNamed:@"unClick"] forState:(UIControlStateNormal)];
     }
 }
 
