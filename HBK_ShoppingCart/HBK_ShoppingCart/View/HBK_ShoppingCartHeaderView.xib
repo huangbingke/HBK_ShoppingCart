@@ -25,9 +25,8 @@
                         <action selector="click:" destination="iN0-l3-epB" eventType="touchUpInside" id="GOb-P4-Gqu"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="38w-tZ-0gh">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="StoreName" translatesAutoresizingMaskIntoConstraints="NO" id="38w-tZ-0gh">
                     <rect key="frame" x="45" y="7" width="30" height="30"/>
-                    <color key="backgroundColor" red="0.19237748129999999" green="1" blue="0.26417491430000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="30" id="BPn-Bx-4t9"/>
                         <constraint firstAttribute="height" constant="30" id="JK9-BT-TvL"/>
@@ -60,6 +59,7 @@
         </view>
     </objects>
     <resources>
+        <image name="StoreName" width="42" height="42"/>
         <image name="unClick" width="29" height="29"/>
     </resources>
 </document>
