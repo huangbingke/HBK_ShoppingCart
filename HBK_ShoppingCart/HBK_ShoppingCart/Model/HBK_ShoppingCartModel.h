@@ -16,7 +16,9 @@
 @property (nonatomic, copy) NSString *shopName;
 @property (nonatomic, copy) NSString *sid;
 
-@property (nonatomic, strong) NSArray *goodsArray;
+
+
+@property (nonatomic, strong) NSMutableArray *goodsArray;
 @property (nonatomic, assign) BOOL isSelect;
 
 @end

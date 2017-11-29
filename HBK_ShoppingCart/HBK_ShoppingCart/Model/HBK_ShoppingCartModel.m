@@ -9,7 +9,14 @@
 #import "HBK_ShoppingCartModel.h"
 
 @implementation HBK_StoreModel
-
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.goodsArray = [NSMutableArray new];
+    }
+    return self;
+}
 
 - (void)setGoods:(NSMutableArray<HBK_GoodsModel *> *)goods {
     _goods = goods;
@@ -19,7 +26,7 @@
         [model setValuesForKeysWithDictionary:dic];
         [tempArray addObject:model];
     }
-    self.goodsArray = [tempArray copy];
+    self.goodsArray = [NSMutableArray arrayWithArray: tempArray];
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {

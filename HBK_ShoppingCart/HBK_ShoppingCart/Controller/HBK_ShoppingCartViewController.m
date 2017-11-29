@@ -81,43 +81,16 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     HBK_StoreModel *storeModel = self.storeArray[section];
-    return storeModel.goods.count;
+    return storeModel.goodsArray.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HBK_ShoppingCartCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HBK_ShoppingCartCell"];
     HBK_StoreModel *storeModel = self.storeArray[indexPath.section];
     HBK_GoodsModel *goodsModel = storeModel.goodsArray[indexPath.row];
     cell.goodsModel = goodsModel;
+    //把事件的处理分离出去
+    [self shoppingCartCellClickAction:cell storeModel:storeModel goodsModel:goodsModel indexPath:indexPath];
     
-    //选中某一行
-    cell.ClickRowBlock = ^(BOOL isClick) {
-        goodsModel.isSelect = isClick;
-        if (isClick) {//选中
-            NSLog(@"选中");
-            [self.selectArray addObject:goodsModel];
-        } else {//取消选中
-            NSLog(@"取消选中");
-            [self.selectArray removeObject:goodsModel];
-        }
-        
-        [self judgeIsSelectSection:indexPath.section];
-        [self judgeIsAllSelect];
-        [self countPrice];
-    };
-    //加
-    cell.AddBlock = ^(UILabel *countLabel) {
-        NSLog(@"%@", countLabel.text);
-        goodsModel.count = countLabel.text;
-        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
-        [self countPrice];
-    };
-    //减
-    cell.CutBlock = ^(UILabel *countLabel) {
-        NSLog(@"%@", countLabel.text);
-        goodsModel.count = countLabel.text;
-        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
-        [self countPrice];
-    };
     return cell;
 }
 
@@ -143,11 +116,20 @@
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"删除";
 }
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        
-        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定删除?" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+        kWeakSelf(self);
+        [alert addAction:[UIAlertAction actionWithTitle:@"是" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+            kStrongSelf(self);
+            [self deleteGoodsWithIndexPath:indexPath];
+            
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"否" style:(UIAlertActionStyleDefault) handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 
@@ -203,6 +185,7 @@
     }
     self.bottomView.allPriceLabel.text = [NSString stringWithFormat:@"合计 ￥%.2f", totlePrice];
 }
+
 
 
 #pragma mark  ----------- Action 点击事件 --------------------
@@ -270,10 +253,86 @@
         [self.myTableView reloadData];
         [self countPrice];
     };
+    
+    bottomView.AccountBlock = ^{
+        NSLog(@"去结算");
+    };
+    
+    
+}
+
+- (void)shoppingCartCellClickAction:(HBK_ShoppingCartCell *)cell
+                         storeModel:(HBK_StoreModel *)storeModel
+                         goodsModel:(HBK_GoodsModel *)goodsModel
+                          indexPath:(NSIndexPath *)indexPath {
+    //选中某一行
+    cell.ClickRowBlock = ^(BOOL isClick) {
+        goodsModel.isSelect = isClick;
+        if (isClick) {//选中
+            NSLog(@"选中");
+            [self.selectArray addObject:goodsModel];
+        } else {//取消选中
+            NSLog(@"取消选中");
+            [self.selectArray removeObject:goodsModel];
+        }
+        
+        [self judgeIsSelectSection:indexPath.section];
+        [self judgeIsAllSelect];
+        [self countPrice];
+    };
+    //加
+    cell.AddBlock = ^(UILabel *countLabel) {
+        NSLog(@"%@", countLabel.text);
+        goodsModel.count = countLabel.text;
+        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
+        [self countPrice];
+    };
+    //减
+    cell.CutBlock = ^(UILabel *countLabel) {
+        NSLog(@"%@", countLabel.text);
+        goodsModel.count = countLabel.text;
+        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
+        [self countPrice];
+    };
 }
 
 
-
+/**
+ 删除某个商品
+ @param indexPath 坐标
+ */
+- (void)deleteGoodsWithIndexPath:(NSIndexPath *)indexPath {
+    HBK_StoreModel *storeModel = [self.storeArray objectAtIndex:indexPath.section];
+    HBK_GoodsModel *goodsModel = [storeModel.goodsArray objectAtIndex:indexPath.row];
+    [storeModel.goodsArray removeObjectAtIndex:indexPath.row];
+    [self.myTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationFade)];
+    if (storeModel.goodsArray.count == 0) {
+        [self.storeArray removeObjectAtIndex:indexPath.section];
+    }
+    
+    if ([self.selectArray containsObject:goodsModel]) {
+        [self.selectArray removeObject:goodsModel];
+        [self countPrice];
+    }
+    
+    NSInteger count = 0;
+    for (HBK_StoreModel *storeModel in self.storeArray) {
+        count += storeModel.goodsArray.count;
+    }
+    if (self.selectArray.count == count) {
+        _bottomView.clickBtn.selected = YES;
+    } else {
+        _bottomView.clickBtn.selected = NO;
+    }
+    
+    if (count == 0) {
+        //此处加载购物车为空的视图
+        
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.myTableView reloadData];
+    });
+}
 
 
 
