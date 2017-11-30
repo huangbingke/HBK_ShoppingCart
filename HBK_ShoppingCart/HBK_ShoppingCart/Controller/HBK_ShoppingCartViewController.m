@@ -284,15 +284,24 @@
     cell.AddBlock = ^(UILabel *countLabel) {
         NSLog(@"%@", countLabel.text);
         goodsModel.count = countLabel.text;
-        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
-        [self countPrice];
+        [storeModel.goodsArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
+        if ([self.selectArray containsObject:goodsModel]) {
+            [self.selectArray removeObject:goodsModel];
+            [self.selectArray addObject:goodsModel];
+            [self countPrice];
+        }
+        
     };
     //减
     cell.CutBlock = ^(UILabel *countLabel) {
         NSLog(@"%@", countLabel.text);
         goodsModel.count = countLabel.text;
-        [self.selectArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
-        [self countPrice];
+        [storeModel.goodsArray replaceObjectAtIndex:indexPath.row withObject:goodsModel];
+        if ([self.selectArray containsObject:goodsModel]) {
+            [self.selectArray removeObject:goodsModel];
+            [self.selectArray addObject:goodsModel];
+            [self countPrice];
+        }
     };
 }
 
